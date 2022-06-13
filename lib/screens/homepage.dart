@@ -2,8 +2,10 @@ import 'package:bankapp/shared/cubit.dart';
 import 'package:bankapp/shared/states.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 import 'package:sqflite/sqflite.dart';
 
@@ -29,8 +31,41 @@ class HomePage extends StatelessWidget {
           return Scaffold(
             key: scaffoldkey,
             appBar: AppBar(
-              title: Text(cubit.titles[cubit.currentIndex]),
-              backgroundColor: Colors.lightBlue,
+              elevation: 20.0,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(cubit.titles[cubit.currentIndex]),
+                ],
+              ),
+              backgroundColor: HexColor('#21083b'),
+              toolbarHeight: 80.0,
+              actions: [
+                Container(
+                  margin: EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    color: Colors.black38,
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: IconButton(
+                      onPressed: () {}, icon: Icon(Icons.menu_outlined)),
+                )
+              ],
+              leadingWidth: 70.0,
+              leading: Container(
+                margin: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color: Colors.black26,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.notifications_none_outlined,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ),
             body: ConditionalBuilder(
               condition: state is! AppGetDatabaseLoadingState,
@@ -106,35 +141,64 @@ class HomePage extends StatelessWidget {
                       .closed
                       .then((value) {
                     cubit.changeBottomSheetState(
-                        isshow: false, icon: Icons.edit);
+                      isshow: false,
+                      icon: Icons.edit,
+                    );
                   });
                   cubit.changeBottomSheetState(isshow: true, icon: Icons.add);
                 }
               },
               child: Icon(cubit.fabIcon),
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              currentIndex: AppCubit.get(context).currentIndex,
-              onTap: (index) {
-                cubit.changeIndex(index);
-              },
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.menu,
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+              child: Container(
+                height: 60,
+                width: 350,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(30.0),
+                  child: BottomNavyBar(
+                    selectedIndex: AppCubit.get(context).currentIndex,
+                    onItemSelected: (index) {
+                      cubit.changeIndex(index);
+                    },
+                    backgroundColor: HexColor('#21083b'),
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    items: [
+                      BottomNavyBarItem(
+                        title: Text('Home'),
+                        icon: Icon(
+                          Icons.menu,
+                          color: Colors.white,
+                          size: 25,
+                        ),
+                        activeColor: Colors.white,
+                        inactiveColor: Colors.white,
+                      ),
+                      BottomNavyBarItem(
+                        title: Text('Transaction'),
+                        icon: Icon(
+                          Icons.check_circle_outline,
+                          color: Colors.white,
+                          size: 25,
+                        ),
+                        activeColor: Colors.white,
+                        inactiveColor: Colors.white,
+                      ),
+                      BottomNavyBarItem(
+                        title: Text('Archived'),
+                        icon: Icon(
+                          Icons.archive_outlined,
+                          color: Colors.white,
+                          size: 25,
+                        ),
+                        activeColor: Colors.white,
+                        inactiveColor: Colors.white,
+                      ),
+                    ],
                   ),
-                  label: 'Home',
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.check_circle_outline,
-                  ),
-                  label: 'Transaction',
-                ),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.archive_outlined), label: 'Archived'),
-              ],
+              ),
             ),
           );
         },

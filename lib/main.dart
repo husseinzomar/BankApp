@@ -1,5 +1,6 @@
 import 'package:bankapp/screens/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 void main() => runApp(MyApp());
 
